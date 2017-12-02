@@ -32,9 +32,28 @@ Quando il primo client si connette tramite WebSocket il server invia un messaggi
 
 Il server quando riceve una richiesta GET all'indirizzo `localhost:3000/login` reindirizza il client su Facebook.
 Ottenuto il consenso il client viene reindirizzato verso `localhost:3000/success`. Il server tramite una richiesta GET all'authorization server (Facebook) scambia così il code con l'access token, il quale viene salvato nella variabile a_t. Un timeout è avviato in questo momento affinché l'access token sia risettato al valore '' al termine del periodo di validità (circa 60 giorni).
-`a_tTimeout(a_t, expires_in)` 
+```javascript
+app.get('/success', function(req, res){
+	console.log('code taken');
+	var code = req.query.code;
+	var options = { url : 'https://graph.facebook.com/v2.11/oauth/access_token?client_id=639398073115710&redirect_uri=http%3A%2F%2Flocalhost:3000%2Fsuccess&client_secret=7aa285d12c5b562e188b76431f31c2aa&code=' + code };
 
-## Ricezione di connessioni ## 
+
+	request(options, function optionalCallback(err, httpResponse, body){
+		if (err) {
+			return console.error('upload failed:', err);
+		}
+		console.log('Upload successful!  Server responded with:', body);
+		var info = JSON.parse(body);
+		a_t = info.access_token;
+		var expires_in = info.expires_in; // access_token's validity time
+		res.send('Got the token ' + a_t + '\nIt expires in ' + expires_in + ' seconds');
+		serverFunctions.a_tTimeout(a_t, expires_in); // value in a_t will be deleted at the end of this timeout
+	});
+});
+``` 
+
+## Gestione delle connessioni ## 
 Una volta ottenuto il consenso, alla ricezione di un nuova connessione, viene eseguita la funzione `getPhotoFromFB(ws, description)`. Al suo interno sono 'innestate' tre richieste GET per ottenere l'URL della foto in base al meteo di oggi. La stringa salvata nella variabile photoURL è passata come parametro nella funzione `serverFunctions.sendThroughWS(ws, photoURL, 'photo')`:
 
 ```
