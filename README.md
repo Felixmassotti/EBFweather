@@ -116,4 +116,4 @@ function sendMsgToExchange(data) {
 ```
 Si utilizza lo scambio di messaggi basato sul protocollo AMQP: il server crea o si assicura che esista un exchange di nome 'weather_exchange' e di tipo 'fanout', su cui andrà a pubblicare il messaggio contenente le previsioni dei giorni seguenti.
 È stato scelto il meccanismo del Publish/Subscribe con coda temporanea ({durable: false}) affinché ogni client abbia a disposizione una propria coda vuota quando si connette. Nella documentazione del client si vedrà che, una volta ricevuto nextDays, il client eseguirà l'unbinding della coda: in questo modo non riceverà nuovamente il messaggio nel caso in cui si connettesse un altro client, essendo la coda di tipo 'fanout'.
-Alla terminazione del client la coda associata sarà eliminata, non possibile fosse stata scelta una named queue.
+Alla terminazione del client la coda associata sarà eliminata, non possibile invece con una named queue.
