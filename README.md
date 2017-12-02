@@ -16,17 +16,17 @@ Il server è ora in attesa di connessioni tramite WebSocket.
 ### Ricezione di connessioni ###
 ```javascipt
 wss.on('connection', function connection(ws) {
-			ws.on('message', function incoming(message) {
-				console.log('received: %s', message);
-			});
-			if (a_t == '')
-				serverFunctions.sendThroughWS(ws, 'Login first to Facebook at localhost:3000/login', 'authentication');
-			else {
-				getPhotoFromFB(ws, main);
-				serverFunctions.sendThroughWS(ws, info, 'weather');
-				getNextDaysWeather();
-			}	
-		});
+	ws.on('message', function incoming(message) {
+		console.log('received: %s', message);
+	});
+	if (a_t == '')
+		serverFunctions.sendThroughWS(ws, 'Login first to Facebook at localhost:3000/login', 'authentication');
+	else {
+		getPhotoFromFB(ws, main);
+		serverFunctions.sendThroughWS(ws, info, 'weather');
+		getNextDaysWeather();
+	}	
+});
 ```
 Quando il primo client si connette tramite WebSocket il server invia un messaggio in cui chiede all'utente di autenticarsi su Facebook e di garantire l'accesso all'applicazione (questo se l'access_token a_t non è stato ancora settato).
 
