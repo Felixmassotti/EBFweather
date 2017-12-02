@@ -63,7 +63,7 @@ function sendThroughWS(ws, data, description) {
 }
 ```
 
-Questa si occupa di incapsulare il dato in ingresso nel campo data `message.data` e di aggiungere una descrizione nel campo `message.description`, permettendo così al client di riconoscere subito il contenuto. I valori che il server può assegnare sono:
+Questa si occupa di incapsulare il dato in ingresso nel campo `message.data` e di aggiungere una descrizione nel campo `message.description`, permettendo così al client di riconoscere subito il contenuto. I valori che il server può assegnare sono:
 - authentication: per richiedere l'autenticazione su Facebook;
 - photo: indica che il contenuto in `data` è l'URL della foto;
 - weather: informazioni meteo di oggi.
