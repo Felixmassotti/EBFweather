@@ -53,7 +53,7 @@ app.get('/success', function(req, res){
 });
 ``` 
 
-## Gestione delle connessioni ## 
+## Gestione delle connessioni tramite WebSockt ## 
 Una volta ottenuto il consenso, alla ricezione di un nuova connessione, viene eseguita la funzione `getPhotoFromFB(ws, description)`. Al suo interno sono 'innestate' tre richieste GET per ottenere l'URL della foto in base al meteo di oggi. La stringa salvata nella variabile photoURL è passata come parametro nella funzione `serverFunctions.sendThroughWS(ws, photoURL, 'photo')`:
 
 ```javascript
@@ -64,6 +64,39 @@ function sendThroughWS(ws, data, description) {
 ```
 
 Questa si occupa di incapsulare il dato in ingresso nel campo data `message.data` e di aggiungere una descrizione nel campo `message.description`, permettendo così al client di riconoscere subito il contenuto. I valori che il server può assegnare sono:
-- authentication : per richiedere l'autenticazione su Facebook
-- photo : indica che il contenuto in `data` è l'URL della foto.
+- authentication: per richiedere l'autenticazione su Facebook;
+- photo: indica che il contenuto in `data` è l'URL della foto;
 - weather: informazioni meteo di oggi.
+
+## Gestione della coda tramite RabbitMQ ##
+Ad ogni connessione in ingresso il server esegue anche la funzione `getNextDaysWeather()`.
+```javascript
+function getNextDaysWeather() {
+	var options = {
+		url : 'http://api.openweathermap.org/data/2.5/forecast?id=' + id + '&units=metric&appid=' + appid
+	}
+	function callback(error, response, body) {
+		if (!error && response.statusCode == 200) {
+			var info = JSON.parse(body);
+			var list = info.list;
+			var j = 0;
+			for (var i=0; i<list.length; i++) {
+				var time = serverFunctions.timeConversion(list[i].dt);
+				if (time == '7:00:00') {
+					nextDays[j] = list[i];
+					nextDays[j].dt = time;
+					j++;
+				}
+			}
+			console.log('GET requests to OpenWeatherMap completed: acquired all infos about today and next days weather forecast');
+			setTimeout(function(){
+				serverFunctions.sendMsgToExchange(nextDays);
+			}, 2000);  // this delays the message's publishing
+		}
+		else
+			console.log(response.statusCode);
+	}
+	request(options, callback);
+}
+```
+OpenWeatherMap risponde alla richiesta GET con il meteo dei 4-5 giorni successivi calcolati ogni 3 ore. Nella variabile Array `nextDays` sono salvate solo le previsioni dei prossimi giorni alle ore 7:00:00. Dopo un intervallo di 2 secondi è invocata la funzione `serverFunctions.sendMsgToExchange(nextDays)`.
