@@ -1,5 +1,5 @@
 # Server
-**Avvio**
+### Avvio ###
 
 Il server è in ascolto sulla porta 3000.
 All'avvio esegue una GET per richiedere a OpenWeatherMap il meteo corrente.
@@ -13,7 +13,7 @@ L'oggetto JSON viene salvato nella variabile info e rielaborato. I campi sunrise
 Il server è ora in attesa di connessioni tramite WebSocket.
 
 
-**Ricezione di connessioni**
+### Ricezione di connessioni ###
 ```javascipt
 wss.on('connection', function connection(ws) {
 			ws.on('message', function incoming(message) {
