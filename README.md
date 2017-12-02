@@ -2,7 +2,7 @@
 ## Avvio ##
 
 Il server è in ascolto sulla porta 3000.
-All'avvio esegue una GET per richiedere a OpenWeatherMap il meteo corrente.
+All'avvio esegue una GET per richiedere a OpenWeatherMap il [meteo corrente.](https://openweathermap.org/current)
 ```javascript
 var options = {
 	url : 'http://api.openweathermap.org/data/2.5/weather?id=' + id + '&units=metric&appid=' + appid
@@ -31,7 +31,7 @@ wss.on('connection', function connection(ws) {
 Quando il primo client si connette tramite WebSocket il server invia un messaggio in cui chiede all'utente di autenticarsi su Facebook e di garantire l'accesso all'applicazione (questo se l'access_token a_t non è stato ancora settato).
 
 Il server quando riceve una richiesta GET all'indirizzo `localhost:3000/login` reindirizza il client su Facebook.
-Ottenuto il consenso il client viene reindirizzato verso `localhost:3000/success`. Il server tramite una richiesta GET all'authorization server (Facebook) scambia così il code con l'access token, il quale viene salvato nella variabile a_t. Un timeout è avviato in questo momento tramite la funzione `a_tTimeout(a_t, expires_in)` affinché l'access token sia risettato al valore '' al termine del periodo di validità (circa 60 giorni).
+Ottenuto il consenso il client viene reindirizzato verso `localhost:3000/success`. Il server tramite una richiesta GET all'authorization server (Facebook) scambia così il code con l'access token, il quale viene salvato nella variabile a_t. Un timeout è avviato in questo momento tramite la funzione `a_tTimeout(a_t, expires_in)` affinché l'access token sia risettato al valore '' al termine del periodo di validità (circa 60 giorni). Qui [ulteriori dettagli.](https://developers.facebook.com/docs/facebook-login/access-tokens/expiration-and-extension) 
 ```javascript
 app.get('/success', function(req, res){
 	console.log('code taken');
@@ -53,7 +53,7 @@ app.get('/success', function(req, res){
 });
 ``` 
 
-## Gestione delle connessioni tramite WebSockt ## 
+## Gestione delle connessioni tramite WebSocket ## 
 Una volta ottenuto il consenso, alla ricezione di un nuova connessione, viene eseguita la funzione `getPhotoFromFB(ws, description)`. Al suo interno sono 'innestate' tre richieste GET per ottenere l'URL della foto in base al meteo di oggi. La stringa salvata nella variabile photoURL è passata come parametro nella funzione `serverFunctions.sendThroughWS(ws, photoURL, 'photo')`:
 
 ```javascript
@@ -99,7 +99,7 @@ function getNextDaysWeather() {
 	request(options, callback);
 }
 ```
-OpenWeatherMap risponde alla richiesta GET con il meteo dei 4-5 giorni successivi calcolati ogni 3 ore. Nella variabile Array `nextDays` sono salvate solo le previsioni dei prossimi giorni alle ore 7:00:00. Dopo un intervallo di 2 secondi è invocata la funzione `serverFunctions.sendMsgToExchange(nextDays)`.
+OpenWeatherMap risponde alla richiesta GET con il [meteo dei 4-5 giorni successivi](https://openweathermap.org/forecast5) calcolati ogni 3 ore. Nella variabile Array `nextDays` sono salvate solo le previsioni dei prossimi giorni alle ore 7:00:00. Dopo un intervallo di 2 secondi è invocata la funzione `serverFunctions.sendMsgToExchange(nextDays)`.
 
 ```javascript
 function sendMsgToExchange(data) {
