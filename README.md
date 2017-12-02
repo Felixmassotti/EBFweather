@@ -1,5 +1,5 @@
 # Server
-### Avvio ###
+## Avvio ##
 
 Il server è in ascolto sulla porta 3000.
 All'avvio esegue una GET per richiedere a OpenWeatherMap il meteo corrente.
@@ -13,8 +13,8 @@ L'oggetto JSON viene salvato nella variabile info e rielaborato. I campi sunrise
 Il server è ora in attesa di connessioni tramite WebSocket.
 
 
-### Ricezione di connessioni ###
-```javascipt
+## Autenticazione e autorizzazione tramite Oauth ##
+```
 wss.on('connection', function connection(ws) {
 	ws.on('message', function incoming(message) {
 		console.log('received: %s', message);
@@ -30,3 +30,21 @@ wss.on('connection', function connection(ws) {
 ```
 Quando il primo client si connette tramite WebSocket il server invia un messaggio in cui chiede all'utente di autenticarsi su Facebook e di garantire l'accesso all'applicazione (questo se l'access_token a_t non è stato ancora settato).
 
+Il server quando riceve una richiesta GET all'indirizzo `localhost:3000/login` reindirizza il client su Facebook.
+Ottenuto il consenso il client viene reindirizzato verso `localhost:3000/success`. Il server tramite una richiesta GET all'authorization server (Facebook) scambia così il code con l'access token, il quale viene salvato nella variabile a_t. Un timeout è avviato in questo momento affinché l'access token sia risettato al valore '' al termine del periodo di validità (circa 60 giorni).
+`a_tTimeout(a_t, expires_in)` 
+
+## Ricezione di connessioni ## 
+Una volta ottenuto il consenso, alla ricezione di un nuova connessione, viene eseguita la funzione `getPhotoFromFB(ws, description)`. Al suo interno sono 'innestate' tre richieste GET per ottenere l'URL della foto in base al meteo di oggi. La stringa salvata nella variabile photoURL è passata come parametro nella funzione `serverFunctions.sendThroughWS(ws, photoURL, 'photo')`:
+
+```
+function sendThroughWS(ws, data, description) {
+	var message = {'data' : data, 'description' : description };
+	ws.send(JSON.stringify(message));
+}
+```
+
+Questa si occupa di incapsulare il dato in ingresso nel campo data `message.data` e di aggiungere una descrizione nel campo `message.description`, permettendo così al client di riconoscere subito il contenuto. I valori che il server può assegnare sono:
+- authentication : per richiedere l'autenticazione su Facebook
+- photo : indica che il contenuto in `data` è l'URL della foto.
+- weather: informazioni meteo di oggi.
