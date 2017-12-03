@@ -48,7 +48,7 @@ Documentazione ufficiale e body della risposta [qui](https://openweathermap.org/
 Documentazione ufficiale [qui](https://developers.facebook.com/docs/facebook-login/access-tokens#usertokens).
 
 
-Le successive richieste neccessitano dell'access token.
+Le successive richieste necessitano dell'access token.
 
 ### 2. Reading Page Albums
 ```javascript
