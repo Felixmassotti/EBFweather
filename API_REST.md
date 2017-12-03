@@ -34,12 +34,27 @@ Documentazione ufficiale e body della risposta [qui](https://openweathermap.org/
 
 
 ## Facebook
-```javascript
-const pageId = '1839290216363075'; // identificativo della pagina 'Meteoretidicalcolatori1718'
-```
-È necessario l'access token.
+### 1. Oauth - Exchange authorization code for access token
+**Richiesta HTTP**
+`GET https://graph.facebook.com/v2.11/oauth/access_token`
 
-### 1. Reading Page Albums
+| Parametro | Descrizione |
+| --------- | ----------- |
+| **client_id** | ottenuto dall'App Dashboard |
+| **redirect_uri** | scelto per il progetto nell'App Dashboard |
+| **client_secret** | ottenuto dall'App Dashboard |
+| **code** | ottenuto a seguito dell'autorizzazione |
+
+Documentazione ufficiale [qui](https://developers.facebook.com/docs/facebook-login/access-tokens#usertokens).
+
+
+Le successive richieste neccessitano dell'access token.
+
+### 2. Reading Page Albums
+```javascript
+const pageId = '1839290216363075'; // identificatore della pagina 'Meteoretidicalcolatori1718'
+```
+
 **Richiesta HTTP**
 `GET https://graph.facebook.com/v2.11/pageId/albums`
 
@@ -47,13 +62,13 @@ Scope richiesto: pages_show_list
 
 Documentazione ufficiale e body della risposta [qui](https://developers.facebook.com/docs/graph-api/reference/page/albums).
 
-### 2. Reading Page Photos
+### 3. Reading Page Photos
 **Richiesta HTTP**
 `GET https://graph.facebook.com/v2.11/albumId/photos`
 
 Documentazione ufficiale e body della risposta [qui](https://developers.facebook.com/docs/graph-api/reference/page/photos/).
 
-### 3. Reading Photo
+### 4. Reading Photo
 **Richiesta HTTP**
 `GET https://graph.facebook.com/v2.11/photoId`
 
