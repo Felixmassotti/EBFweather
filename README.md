@@ -21,7 +21,9 @@ wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc |
 sudo apt-get update
 sudo apt-get install rabbitmq-server
 ```
-
+I moduli node utilizzati si trovano nella cartella `node_modules`.
+Le funzioni ausiliarie in `serverFunctions.js`.
+La documentazione delle API REST implementate è nel file [API_REST.md](API_REST.md).
 
 ## Avvio ##
 
