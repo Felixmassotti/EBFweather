@@ -1,7 +1,7 @@
 # Server
 
 ## Configurazioni preliminari
-Il server è basato sul framework [Node.js](https://nodejs.org/it/download/)
+Il server è basato sul framework [Node.js](https://nodejs.org/it/download/).
 
 Per il funzionamento su Ubuntu di [RabbitMQ Server](https://www.rabbitmq.com/install-debian.html) occorre installare erlang-solutions:
 ```
@@ -26,7 +26,7 @@ sudo apt-get install rabbitmq-server
 ## Avvio ##
 
 Il server è in ascolto sulla porta 3000.
-All'avvio esegue una GET per richiedere a OpenWeatherMap il [meteo corrente.](https://openweathermap.org/current)
+All'avvio esegue una GET per richiedere a OpenWeatherMap il [meteo corrente](https://openweathermap.org/current).
 ```javascript
 var options = {
 	url : 'http://api.openweathermap.org/data/2.5/weather?id=' + id + '&units=metric&appid=' + appid
@@ -55,7 +55,7 @@ wss.on('connection', function connection(ws) {
 Quando il primo client si connette tramite WebSocket il server invia un messaggio in cui chiede all'utente di autenticarsi su Facebook e di garantire l'accesso all'applicazione (questo se l'access token a_t non è stato ancora settato).
 
 Il server quando riceve una richiesta GET all'indirizzo `localhost:3000/login` reindirizza il client su Facebook.
-Ottenuto il consenso il client viene reindirizzato verso `localhost:3000/success`. Il server tramite una richiesta GET all'authorization server (Facebook) scambia così il code con l'access token, il quale viene salvato nella variabile a_t. Un timeout è avviato in questo momento tramite la funzione `a_tTimeout(a_t, expires_in)` affinché l'access token sia risettato al valore '' al termine del periodo di validità (circa 60 giorni). Qui [ulteriori dettagli.](https://developers.facebook.com/docs/facebook-login/access-tokens/expiration-and-extension) 
+Ottenuto il consenso il client viene reindirizzato verso `localhost:3000/success`. Il server tramite una richiesta GET all'authorization server (Facebook) scambia così il code con l'access token, il quale viene salvato nella variabile a_t. Un timeout è avviato in questo momento tramite la funzione `a_tTimeout(a_t, expires_in)` affinché l'access token sia risettato al valore '' al termine del periodo di validità (circa 60 giorni). Qui [ulteriori dettagli](https://developers.facebook.com/docs/facebook-login/access-tokens/expiration-and-extension). 
 ```javascript
 app.get('/success', function(req, res){
 	console.log('code taken');
