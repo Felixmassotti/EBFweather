@@ -56,6 +56,7 @@ Documentazione ufficiale e body della risposta [qui](https://developers.facebook
 ### 3. Reading Photo
 **Richiesta HTTP**
 `GET https://graph.facebook.com/v2.11/photoId`
+
 | Parametro | Descrizione |
 | --------- | ----------- |
 | **fields** | lista dei campi da restituire: 'images' per le rappresentazioni della foto |
