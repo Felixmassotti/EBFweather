@@ -78,7 +78,7 @@ app.get('/success', function(req, res){
 ``` 
 
 ## Gestione delle connessioni tramite WebSocket ## 
-Una volta ottenuto il consenso, alla ricezione di una nuova connessione, viene eseguita la funzione `getPhotoFromFB(ws, description)`. Al suo interno sono 'innestate' tre richieste GET per ottenere l'URL della foto in base al meteo di oggi. La stringa salvata nella variabile photoURL è passata come parametro nella funzione `serverFunctions.sendThroughWS(ws, photoURL, 'photo')`:
+Una volta ottenuto il consenso, alla ricezione di una nuova connessione, viene eseguita la funzione `getPhotoFromFB(ws, description)`. Al suo interno sono 'innestate' tre richieste GET per ottenere l'URL della foto in base al meteo di oggi (ricerca dell'album Meteo tramite pageId, richiesta delle foto tramite albumId, ricerca dell'URL tramite photoID). La stringa salvata nella variabile photoURL è passata come parametro nella funzione `serverFunctions.sendThroughWS(ws, photoURL, 'photo')`:
 
 ```javascript
 function sendThroughWS(ws, data, description) {
