@@ -6,7 +6,7 @@ const id = '3169070' // id of Rome
 const appid = 'b011edc116685d89dfdc35517d9ce205' // our API key 
 ```
 
-#### Current weather data
+### 1. Current weather data
 
 **Richiesta HTTP**
 `GET http://api.openweathermap.org/data/2.5/weather`
@@ -20,7 +20,7 @@ const appid = 'b011edc116685d89dfdc35517d9ce205' // our API key
 Per la documentazione ufficiale e in particolare per il body della risposta clicca [qui](https://openweathermap.org/current).
 
 
-#### 5 day / 3 hours forecast data
+### 2. 5 day / 3 hours forecast data
 **Richiesta HTTP**
 `GET http://api.openweathermap.org/data/2.5/forecast`
 
