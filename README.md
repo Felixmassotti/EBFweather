@@ -28,7 +28,7 @@ wss.on('connection', function connection(ws) {
 	}	
 });
 ```
-Quando il primo client si connette tramite WebSocket il server invia un messaggio in cui chiede all'utente di autenticarsi su Facebook e di garantire l'accesso all'applicazione (questo se l'access_token a_t non è stato ancora settato).
+Quando il primo client si connette tramite WebSocket il server invia un messaggio in cui chiede all'utente di autenticarsi su Facebook e di garantire l'accesso all'applicazione (questo se l'access token a_t non è stato ancora settato).
 
 Il server quando riceve una richiesta GET all'indirizzo `localhost:3000/login` reindirizza il client su Facebook.
 Ottenuto il consenso il client viene reindirizzato verso `localhost:3000/success`. Il server tramite una richiesta GET all'authorization server (Facebook) scambia così il code con l'access token, il quale viene salvato nella variabile a_t. Un timeout è avviato in questo momento tramite la funzione `a_tTimeout(a_t, expires_in)` affinché l'access token sia risettato al valore '' al termine del periodo di validità (circa 60 giorni). Qui [ulteriori dettagli.](https://developers.facebook.com/docs/facebook-login/access-tokens/expiration-and-extension) 
@@ -54,7 +54,7 @@ app.get('/success', function(req, res){
 ``` 
 
 ## Gestione delle connessioni tramite WebSocket ## 
-Una volta ottenuto il consenso, alla ricezione di un nuova connessione, viene eseguita la funzione `getPhotoFromFB(ws, description)`. Al suo interno sono 'innestate' tre richieste GET per ottenere l'URL della foto in base al meteo di oggi. La stringa salvata nella variabile photoURL è passata come parametro nella funzione `serverFunctions.sendThroughWS(ws, photoURL, 'photo')`:
+Una volta ottenuto il consenso, alla ricezione di una nuova connessione, viene eseguita la funzione `getPhotoFromFB(ws, description)`. Al suo interno sono 'innestate' tre richieste GET per ottenere l'URL della foto in base al meteo di oggi. La stringa salvata nella variabile photoURL è passata come parametro nella funzione `serverFunctions.sendThroughWS(ws, photoURL, 'photo')`:
 
 ```javascript
 function sendThroughWS(ws, data, description) {
@@ -116,4 +116,4 @@ function sendMsgToExchange(data) {
 ```
 Si utilizza lo scambio di messaggi basato sul protocollo AMQP: il server crea o si assicura che esista un exchange di nome 'weather_exchange' e di tipo 'fanout', su cui andrà a pubblicare il messaggio contenente le previsioni dei giorni seguenti.
 È stato scelto il meccanismo del Publish/Subscribe con coda temporanea ({durable: false}) affinché ogni client abbia a disposizione una propria coda vuota quando si connette. Nella documentazione del client si vedrà che, una volta ricevuto nextDays, il client eseguirà l'unbinding della coda: in questo modo non riceverà nuovamente il messaggio nel caso in cui si connettesse un altro client, essendo la coda di tipo 'fanout'.
-Alla terminazione del client la coda associata sarà eliminata, non possibile invece con una named queue.
+Alla terminazione del client la coda associata sarà eliminata, operazione non possibile invece con una named queue.
