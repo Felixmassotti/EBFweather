@@ -20,7 +20,7 @@ const appid = 'b011edc116685d89dfdc35517d9ce205' // our API key
 Documentazione ufficiale e body della risposta [qui](https://openweathermap.org/current).
 
 
-### 2. 5 day / 3 hours forecast data
+### 2. 5 day / 3 hour forecast data
 **Richiesta HTTP**
 `GET http://api.openweathermap.org/data/2.5/forecast`
 
