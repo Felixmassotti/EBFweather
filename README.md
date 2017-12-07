@@ -44,16 +44,18 @@ Il server si mette in attesa di connessioni tramite WebSocket.
 ## Autenticazione e autorizzazione tramite Oauth ##
 ```javascript
 wss.on('connection', function connection(ws) {
-	ws.on('message', function incoming(message) {
-		console.log('received: %s', message);
-	});
 	if (a_t == '')
 		serverFunctions.sendThroughWS(ws, 'Login first to Facebook at localhost:3000/login', 'authentication');
-	else {
-		getPhotoFromFB(ws, main);
-		serverFunctions.sendThroughWS(ws, info, 'weather');
-		getNextDaysWeather();
-	}	
+	ws.on('message', function incoming(message) {
+		console.log('received: %s', message);
+		if (a_t != '' && message == 'On') {
+			getPhotoFromFB(ws, main);
+			serverFunctions.sendThroughWS(ws, info, 'weather');
+			getNextDaysWeather();
+		}
+		else if (a_t != '' && message == 'post')
+			postTodayWeatherOnFB(ws, info);
+	});	
 });
 ```
 Quando il primo client si connette tramite WebSocket il server invia un messaggio in cui chiede all'utente di autenticarsi su Facebook e di garantire l'accesso all'applicazione (questo se l'access token a_t non è stato ancora settato).
@@ -92,9 +94,10 @@ function sendThroughWS(ws, data, description) {
 ```
 
 Questa si occupa di incapsulare il dato in ingresso nel campo `message.data` e di aggiungere una descrizione nel campo `message.description`, permettendo così al client di riconoscere subito il contenuto. I valori che il server può assegnare sono:
-- authentication: per richiedere l'autenticazione su Facebook;
-- photo: indica che il contenuto in `data` è l'URL della foto;
-- weather: informazioni meteo di oggi.
+- **authentication**: per richiedere l'autenticazione su Facebook;
+- **photo**: indica che il contenuto in `data` è l'URL della foto;
+- **weather**: informazioni meteo di oggi;
+- **post**: indica che il post è stato pubblicato sulla pagina (in `data` l'URL per visualizzare i post).
 
 ## Gestione della coda tramite RabbitMQ ##
 Ad ogni connessione in ingresso il server esegue anche la funzione `getNextDaysWeather()`.
