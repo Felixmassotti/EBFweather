@@ -52,13 +52,13 @@ Le successive richieste necessitano dell'access token.
 
 ### 2. Reading Page Albums
 ```javascript
-const pageId = '1839290216363075'; // identificatore della pagina 'Meteoretidicalcolatori1718'
+const pageId = '1839290216363075'; // pageId of 'Meteoretidicalcolatori1718'
 ```
 
 **Richiesta HTTP**
 `GET https://graph.facebook.com/v2.11/pageId/albums`
 
-Scope richiesto: pages_show_list
+Scope richiesti: pages_show_list
 
 Documentazione ufficiale e body della risposta [qui](https://developers.facebook.com/docs/graph-api/reference/page/albums).
 
@@ -77,3 +77,15 @@ Documentazione ufficiale e body della risposta [qui](https://developers.facebook
 | **fields** | lista dei campi da restituire: 'images' per le rappresentazioni della foto |
 
 Documentazione ufficiale [qui](https://developers.facebook.com/docs/graph-api/reference/photo/).
+
+### 5. Post on a Facebook page
+**Richiesta HTTP**
+`GET https://graph.facebook.com/v2.11/pageId/feed`
+
+Scope richiesti: user_posts, publish_actions, manage_pages
+
+| Parametro | Descrizione |
+| --------- | ----------- |
+| **message** | messaggio da pubblicare |
+
+Documentazione ufficiale [qui](https://developers.facebook.com/docs/graph-api/reference/v2.11/post#publishing)
