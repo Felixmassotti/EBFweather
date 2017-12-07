@@ -84,7 +84,7 @@ app.get('/success', function(req, res){
 ``` 
 
 ## Gestione delle connessioni tramite WebSocket ## 
-Una volta ottenuto il consenso, alla ricezione di una nuova connessione, viene eseguita la funzione `getPhotoFromFB(ws, description)`. Al suo interno sono 'innestate' tre richieste GET per ottenere l'URL della foto in base al meteo di oggi (ricerca dell'album Meteo tramite pageId, richiesta delle foto tramite albumId, ricerca dell'URL tramite photoID). La stringa salvata nella variabile photoURL è passata come parametro nella funzione `serverFunctions.sendThroughWS(ws, photoURL, 'photo')`:
+Una volta ottenuto il consenso, alla ricezione di una nuova connessione e del messaggio 'On', viene eseguita la funzione `getPhotoFromFB(ws, description)`. Al suo interno sono 'innestate' tre richieste GET per ottenere l'URL della foto in base al meteo di oggi (ricerca dell'album Meteo tramite pageId, richiesta delle foto tramite albumId, ricerca dell'URL tramite photoID). La stringa salvata nella variabile photoURL è passata come parametro nella funzione `serverFunctions.sendThroughWS(ws, photoURL, 'photo')`:
 
 ```javascript
 function sendThroughWS(ws, data, description) {
@@ -105,7 +105,7 @@ Se il server riceve tramite WebSocket il messaggio 'post', allora invocherà la 
 `serverFunctions.sendThroughWS(ws, 'Post has been published on https://www.facebook.com/Meteoretidicalcolatori1718-1839290216363075/posts_to_page/', 'post');`
 
 ## Gestione della coda tramite RabbitMQ ##
-Ad ogni connessione in ingresso il server esegue anche la funzione `getNextDaysWeather()`.
+Una volta settato l'access token, ad ogni nuovo messaggio 'On' il server esegue anche la funzione `getNextDaysWeather()`.
 ```javascript
 function getNextDaysWeather() {
 	var options = {
