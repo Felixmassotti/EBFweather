@@ -33,7 +33,7 @@ Il server è in ascolto sulla porta 3000.
 All'avvio esegue una GET per richiedere a OpenWeatherMap il [meteo corrente](https://openweathermap.org/current).
 ```javascript
 var options = {
-	url : 'http://api.openweathermap.org/data/2.5/weather?id=' + id + '&units=metric&appid=' + appid
+	url : 'http://api.openweathermap.org/data/2.5/weather?id=' + id + '&units=metric&lang=it&appid=' + appid
 }
 ```
 L'oggetto JSON viene salvato nella variabile info e rielaborato. I campi sunrise, sunset e dt sono infatti convertiti nel formato HH:MM:SS tramite la funzione `timeConversion(unix_timestamp)` definita in serverFunctions.js.  
@@ -103,7 +103,7 @@ Questa si occupa di incapsulare il dato in ingresso nel campo `message.data` e d
 Se il server riceve tramite WebSocket il messaggio 'post', allora invocherà la funzione `postTodayWeatherOnFB(ws, info)` che si occupa di pubblicare un messaggio a nome dell'utente (richiesta POST) con la temperatura attuale sulla pagina Meteoretidicalcolatori1718. Se l'operazione ha successo il server invia al client un messaggio di conferma tramite WebSocket:
 
 ```javascript
-serverFunctions.sendThroughWS(ws, 'Post has been published on https://www.facebook.com/Meteoretidicalcolatori1718-1839290216363075/posts_to_page/', 'post');
+serverFunctions.sendThroughWS(ws, 'Post has been published on https://www.facebook.com/me', 'post');
 ```
 
 ## Gestione della coda tramite RabbitMQ ##
@@ -111,24 +111,22 @@ Una volta settato l'access token, ad ogni nuovo messaggio 'On' il server esegue 
 ```javascript
 function getNextDaysWeather() {
 	var options = {
-		url : 'http://api.openweathermap.org/data/2.5/forecast?id=' + id + '&units=metric&appid=' + appid
+		url : 'http://api.openweathermap.org/data/2.5/forecast?id=' + id + '&units=metric&lang=it&appid=' + appid
 	}
 	function callback(error, response, body) {
 		if (!error && response.statusCode == 200) {
 			var info = JSON.parse(body);
 			var list = info.list;
-			var j = 0;
 			for (var i=0; i<list.length; i++) {
 				var time = serverFunctions.timeConversion(list[i].dt);
-				if (time == '7:00:00') {
-					nextDays[j] = list[i];
-					nextDays[j].dt = time;
-					j++;
-				}
+				if (time == '1:00:00')
+					break;
+				nextHours[i] = list[i];
+				nextHours[i].dt = time;
 			}
-			console.log('GET requests to OpenWeatherMap completed: acquired all infos about today and next days weather forecast');
+			console.log('GET requests to OpenWeatherMap completed: acquired all infos about today weather forecast');
 			setTimeout(function(){
-				serverFunctions.sendMsgToExchange(nextDays);
+				serverFunctions.sendMsgToExchange(nextHours);
 			}, 2000);  // this delays the message's publishing
 		}
 		else
@@ -137,7 +135,7 @@ function getNextDaysWeather() {
 	request(options, callback);
 }
 ```
-OpenWeatherMap risponde alla richiesta GET con il [meteo dei 4-5 giorni successivi](https://openweathermap.org/forecast5) calcolati ogni 3 ore. Nella variabile Array `nextDays` sono salvate solo le previsioni dei prossimi giorni alle ore 7:00:00. Dopo un intervallo di 2 secondi è invocata la funzione `serverFunctions.sendMsgToExchange(nextDays)`.
+OpenWeatherMap risponde alla richiesta GET con il [meteo dei 5 giorni successivi](https://openweathermap.org/forecast5) calcolati ogni 3 ore. Nella variabile Array `nextDays` sono salvate solo le previsioni di oggi per le prossime ore. Dopo un intervallo di 2 secondi è invocata la funzione `serverFunctions.sendMsgToExchange(nextDays)`.
 
 ```javascript
 function sendMsgToExchange(data) {
