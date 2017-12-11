@@ -80,7 +80,7 @@ Documentazione ufficiale [qui](https://developers.facebook.com/docs/graph-api/re
 
 ### 5. Post on a Facebook page
 **Richiesta HTTP**
-`POST https://graph.facebook.com/v2.11/pageId/feed`
+`POST https://graph.facebook.com/v2.11/me/feed`
 
 Scope richiesti: user_posts, publish_actions, manage_pages
 
