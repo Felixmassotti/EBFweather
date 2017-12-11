@@ -100,7 +100,7 @@ Questa si occupa di incapsulare il dato in ingresso nel campo `message.data` e d
 - **post**: indica che il post è stato pubblicato sulla pagina (in `data` l'URL per visualizzare i post).
 
 ### Pubblicazione di un post su Facebook ###
-Se il server riceve tramite WebSocket il messaggio 'post', allora invocherà la funzione `postTodayWeatherOnFB(ws, info)` che si occupa di pubblicare un messaggio a nome dell'utente (richiesta POST) con la temperatura attuale sulla pagina Meteoretidicalcolatori1718. Se l'operazione ha successo il server invia al client un messaggio di conferma tramite WebSocket:
+Se il server riceve tramite WebSocket il messaggio 'post', allora invocherà la funzione `postTodayWeatherOnFB(ws, info)` che si occupa di pubblicare un messaggio a nome dell'utente (richiesta POST) con la temperatura attuale sulla sua pagina del profilo. Se l'operazione ha successo il server invia al client un messaggio di conferma tramite WebSocket:
 
 ```javascript
 serverFunctions.sendThroughWS(ws, 'Post has been published on https://www.facebook.com/me', 'post');
