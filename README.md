@@ -97,10 +97,10 @@ Questa si occupa di incapsulare il dato in ingresso nel campo `message.data` e d
 - **authentication**: per richiedere l'autenticazione su Facebook;
 - **photo**: indica che il contenuto in `data` è l'URL della foto;
 - **weather**: informazioni meteo di oggi;
-- **post**: indica che il post è stato pubblicato sulla pagina (in `data` l'URL per visualizzare i post).
+- **post**: indica che il post è stato pubblicato sulla pagina del profilo Facebook (in `data` l'URL del profilo).
 
 ### Pubblicazione di un post su Facebook ###
-Se il server riceve tramite WebSocket il messaggio 'post', allora invocherà la funzione `postTodayWeatherOnFB(ws, info)` che si occupa di pubblicare un messaggio a nome dell'utente (richiesta POST) con la temperatura attuale sulla sua pagina del profilo. Se l'operazione ha successo il server invia al client un messaggio di conferma tramite WebSocket:
+Se il server riceve tramite WebSocket il messaggio 'post', allora invocherà la funzione `postTodayWeatherOnFB(ws, info)` che si occupa di pubblicare sul profilo un messaggio a nome dell'utente (richiesta POST) con la temperatura attuale. Se l'operazione ha successo il server invia al client un messaggio di conferma tramite WebSocket:
 
 ```javascript
 serverFunctions.sendThroughWS(ws, 'Post has been published on https://www.facebook.com/me', 'post');
@@ -135,7 +135,7 @@ function getNextDaysWeather() {
 	request(options, callback);
 }
 ```
-OpenWeatherMap risponde alla richiesta GET con il [meteo dei 5 giorni successivi](https://openweathermap.org/forecast5) calcolati ogni 3 ore. Nella variabile Array `nextHours` sono salvate solo le previsioni di oggi per le prossime ore. Dopo un intervallo di 2 secondi è invocata la funzione `serverFunctions.sendMsgToExchange(nextDays)`.
+OpenWeatherMap risponde alla richiesta GET con il [meteo dei 5 giorni successivi](https://openweathermap.org/forecast5) calcolati ogni 3 ore. Nella variabile Array `nextHours` sono salvate solo le previsioni di oggi per le prossime ore. Dopo un intervallo di 2 secondi è invocata la funzione `serverFunctions.sendMsgToExchange(nextHours)`.
 
 ```javascript
 function sendMsgToExchange(data) {
