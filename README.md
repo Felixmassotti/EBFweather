@@ -135,7 +135,7 @@ function getNextDaysWeather() {
 	request(options, callback);
 }
 ```
-OpenWeatherMap risponde alla richiesta GET con il [meteo dei 5 giorni successivi](https://openweathermap.org/forecast5) calcolati ogni 3 ore. Nella variabile Array `nextDays` sono salvate solo le previsioni di oggi per le prossime ore. Dopo un intervallo di 2 secondi è invocata la funzione `serverFunctions.sendMsgToExchange(nextDays)`.
+OpenWeatherMap risponde alla richiesta GET con il [meteo dei 5 giorni successivi](https://openweathermap.org/forecast5) calcolati ogni 3 ore. Nella variabile Array `nextHours` sono salvate solo le previsioni di oggi per le prossime ore. Dopo un intervallo di 2 secondi è invocata la funzione `serverFunctions.sendMsgToExchange(nextDays)`.
 
 ```javascript
 function sendMsgToExchange(data) {
