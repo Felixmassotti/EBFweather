@@ -78,7 +78,7 @@ Documentazione ufficiale e body della risposta [qui](https://developers.facebook
 
 Documentazione ufficiale [qui](https://developers.facebook.com/docs/graph-api/reference/photo/).
 
-### 5. Post on a Facebook page
+### 5. Post on your Facebook profile
 **Richiesta HTTP**
 `POST https://graph.facebook.com/v2.11/me/feed`
 
