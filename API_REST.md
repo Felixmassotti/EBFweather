@@ -15,6 +15,7 @@ const appid = 'b011edc116685d89dfdc35517d9ce205' // our API key
 | --------- | ----------- |
 | **id** | id della città |
 | **units** | "metric" o "imperial" |
+| **lang** | "it" per i risultati in italiano |
 | **appid** | api key fornita al momento della registrazione |
 
 Documentazione ufficiale e body della risposta [qui](https://openweathermap.org/current).
@@ -28,6 +29,7 @@ Documentazione ufficiale e body della risposta [qui](https://openweathermap.org/
 | --------- | ----------- |
 | **id** | id della città |
 | **units** | "metric" o "imperial" |
+| **lang** | "it" per i risultati in italiano |
 | **appid** | api key fornita al momento della registrazione |
 
 Documentazione ufficiale e body della risposta [qui](https://openweathermap.org/forecast5).
