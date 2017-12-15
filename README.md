@@ -55,13 +55,15 @@ wss.on('connection', function connection(ws) {
 		}
 		else if (a_t != '' && message == 'post')
 			postTodayWeatherOnFB(ws, info);
+		else if (a_t != '' && message == 'Off')
+			a_t = ''; // It deletes the auth code at the end of connection
 	});	
 });
 ```
 Quando il primo client si connette tramite WebSocket il server invia un messaggio in cui chiede all'utente di autenticarsi su Facebook e di garantire l'accesso all'applicazione (questo se l'access token a_t non è stato ancora settato).
 
 Il server quando riceve una richiesta GET all'indirizzo `localhost:3000/login` reindirizza il client su Facebook.
-Ottenuto il consenso il client viene reindirizzato verso `localhost:3000/success`. Il server tramite una richiesta GET all'authorization server (Facebook) scambia così il code con l'access token, il quale viene salvato nella variabile a_t. Un timeout è avviato in questo momento tramite la funzione `a_tTimeout(a_t, expires_in)` affinché l'access token sia risettato al valore '' al termine del periodo di validità (circa 60 giorni). Qui [ulteriori dettagli](https://developers.facebook.com/docs/facebook-login/access-tokens/expiration-and-extension). 
+Ottenuto il consenso il client viene reindirizzato verso `localhost:3000/success`. Il server tramite una richiesta GET all'authorization server (Facebook) scambia così il code con l'access token, il quale viene salvato nella variabile a_t. 
 ```javascript
 app.get('/success', function(req, res){
 	console.log('code taken');
@@ -76,9 +78,7 @@ app.get('/success', function(req, res){
 		console.log('Upload successful!  Server responded with:', body);
 		var info = JSON.parse(body);
 		a_t = info.access_token;
-		var expires_in = info.expires_in; // access_token's validity time
-		res.send('Got the token ' + a_t + '\nIt expires in ' + expires_in + ' seconds');
-		serverFunctions.a_tTimeout(a_t, expires_in); // value in a_t will be deleted at the end of this timeout
+		res.send('Got the token ' + a_t + '\nIt expires in ' + info.expires_in + ' seconds');
 	});
 });
 ``` 
@@ -105,6 +105,9 @@ Se il server riceve tramite WebSocket il messaggio 'post', allora invocherà la 
 ```javascript
 serverFunctions.sendThroughWS(ws, 'Post has been published on https://www.facebook.com/me', 'post');
 ```
+
+### Eliminazione dell'access token
+Il client invia il messaggio 'Off' in chiusura della connessione, in seguito al quale il server elimina l'access token (a_t = ''). Si noti che la gestione dei bottoni in Listener.java è gestita in modo da permettere all'utente di premere 'Off' solo dopo aver autorizzato l'applicazione, quindi dopo aver completato almeno la prima richiesta a Facebook (GET della foto).
 
 ## Gestione della coda tramite RabbitMQ ##
 Una volta settato l'access token, ad ogni nuovo messaggio 'On' il server esegue anche la funzione `getNextDaysWeather()`.
