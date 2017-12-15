@@ -88,7 +88,7 @@ Una volta ottenuto il consenso, alla ricezione di una nuova connessione e del me
 
 ```javascript
 function sendThroughWS(ws, data, description) {
-	var message = {'data' : data, 'description' : description };
+	var message = { 'data' : data, 'description' : description };
 	ws.send(JSON.stringify(message));
 }
 ```
