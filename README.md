@@ -1,7 +1,11 @@
 # Server
 
 ## Breve descrizione
-**EBFweather** è una applicazione web che permette all'utente di visualizzare in una apposita finestra Java le previsioni del tempo per le successive ore della giornata ([OpenWeatherMap](https://openweathermap.org/api)). L'app mostra una foto diversa a seconda delle condizioni metereologiche attuali, ottenuta da un album fotografico della pagina Facebook [Meteoretidicalcolatori1718](https://www.facebook.com/pg/Meteoretidicalcolatori1718-1839290216363075/photos/). L'utente potrà usare l'applicazione solo dopo averla autorizzata, in particolare per poter postare sul proprio profilo Facebook un messaggio con la temperatura corrente. Un logger nel frattempo terrà traccia della comunicazione Client-Server stampando su terminale alcuni messaggi sullo stato della connessione.
+**EBFweather** è una applicazione web che permette all'utente di visualizzare in una apposita finestra Java le previsioni del tempo per le successive ore della giornata ([OpenWeatherMap](https://openweathermap.org/api)). L'app mostra una foto diversa a seconda delle condizioni metereologiche attuali, ottenuta da un album fotografico della pagina Facebook [Meteoretidicalcolatori1718](https://www.facebook.com/pg/Meteoretidicalcolatori1718-1839290216363075/photos/).
+
+![GitHub Logo](image.png)
+
+L'utente potrà usare l'applicazione solo dopo averla autorizzata, in particolare per poter postare sul proprio profilo Facebook un messaggio con la temperatura corrente. Un logger nel frattempo terrà traccia della comunicazione Client-Server stampando su terminale alcuni messaggi sullo stato della connessione.
 
 ## Setup iniziale
 Per il funzionamento su Linux di AMQP occorre installare [RabbitMQ Server](https://www.rabbitmq.com/install-debian.html).
