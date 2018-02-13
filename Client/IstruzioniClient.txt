@@ -1,0 +1,6 @@
+/* ---- Per compilare ---- */
+javac -cp .:lib/* Avvio_Client.java
+
+
+/* ---- Per eseguire ---- */
+java -cp .:lib/* Avvio_Client
