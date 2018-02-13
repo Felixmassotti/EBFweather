@@ -1,29 +1,14 @@
 # Server
 
+## Breve descrizione
+**EBFweather** è una applicazione web che permette all'utente di visualizzare in una apposita finestra Java le previsioni del tempo per le successive ore della giornata ([OpenWeatherMap](https://openweathermap.org/api)). L'app mostra una foto diversa a seconda delle condizioni metereologiche attuali, ottenuta da un album fotografico della pagina Facebook [Meteoretidicalcolatori1718](https://www.facebook.com/pg/Meteoretidicalcolatori1718-1839290216363075/photos/). L'utente potrà usare l'applicazione solo dopo averla autorizzata, in particolare per poter postare sul proprio profilo Facebook un messaggio con la temperatura corrente. Un logger nel frattempo terrà traccia della comunicazione Client-Server stampando su terminale alcuni messaggi sullo stato della connessione.
+
 ## Setup iniziale
-Il server è basato sul framework [Node.js](https://nodejs.org/it/download/).
+Per il funzionamento su Linux di AMQP occorre installare [RabbitMQ Server](https://www.rabbitmq.com/install-debian.html).
 
-Per il funzionamento su Ubuntu di [RabbitMQ Server](https://www.rabbitmq.com/install-debian.html) occorre installare erlang-solutions:
-```
-wget https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb
-sudo dpkg -i erlang-solutions_1.0_all.deb
-sudo apt-get update
-sudo apt-get install erlang
-```
-Per installare RabbitMQ Server:
-```
-echo 'deb http://www.rabbitmq.com/debian/ testing main' |
-     sudo tee /etc/apt/sources.list.d/rabbitmq.list
+Il server è basato sul framework [Node.js](https://nodejs.org/it/download/) e sono richiesti i seguenti node modules:
 
-wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc |
-     sudo apt-key add -
-
-sudo apt-get update
-sudo apt-get install rabbitmq-server
 ```
-Di seguito i node modules richiesti:
-```
-
 $ npm install express
 $ npm install body-parser
 $ npm install request
@@ -32,7 +17,7 @@ $ npm install amqp
 $ npm install amqplib
 ```
 
-Le funzioni ausiliarie sono definite in `serverFunctions.js`.
+Le funzioni ausiliarie sono definite in [serverFunctions.js](serverFunctions.js).
 
 La **_documentazione delle API REST_** implementate è nel file [API_REST.md](API_REST.md).
 
