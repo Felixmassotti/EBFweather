@@ -49,7 +49,7 @@ L'oggetto JSON viene salvato nella variabile todayWeather e rielaborato. I campi
 
 Il server si mette in attesa di connessioni tramite WebSocket: il flag wssReady inizialmente settato a false è ora true.
 
-*N:B*: ogni 10 minuti viene richiamata la funzione `getTodayWeather()` per aggiornare il meteo corrente. Nella fase di update il server non accetta nuove connessioni WebSocket (wssReady = false).
+**N:B**: ogni 10 minuti viene richiamata la funzione `getTodayWeather()` per aggiornare il meteo corrente. Nella fase di update il server non accetta nuove connessioni WebSocket (wssReady = false).
 
 
 ## Autenticazione e autorizzazione tramite Oauth
@@ -59,23 +59,24 @@ wss.on('connection', function connection(ws){
 		if (a_t == '')
 			serverFunctions.sendThroughWS(ws, 'Login first to Facebook at localhost:3000/login', 'authentication');
 		ws.on('message', function incoming(message){
-			console.log('received: %s', message);
 			if (a_t != '' && message == 'On') {
+				serverFunctions.sendMsgToQueue(serverFunctions.getTime() + ': received new connection');
 				serverFunctions.sendThroughWS(ws, todayWeather, 'weather');
 				getPhotoFromFB(ws, todayWeather.weather[0].main);
 				getNextDaysWeather(ws);
 			}
-			else if (a_t != '' && message == 'post')
+			else if (a_t != '' && message == 'post') {
 				postTodayWeatherOnFB(ws, todayWeather);
+			}
 		});
 	}
 	ws.on('close', function(){
-		console.log('Client closing connection');
 		a_t = ''; // It deletes the auth code at the end of connection
+		serverFunctions.sendMsgToQueue(serverFunctions.getTime() + ': client disconnected');
 	});	
 	ws.on('error', function(){
-		console.log('Client closing connection');
 		a_t = ''; // It deletes the auth code at the end of connection
+		serverFunctions.sendMsgToQueue(serverFunctions.getTime() + ': client disconnected');
 	});
 });
 ```
@@ -85,19 +86,24 @@ Il server quando riceve una richiesta GET all'indirizzo `localhost:3000/login` r
 Ottenuto il consenso il client viene reindirizzato verso `localhost:3000/success`. Il server tramite una richiesta GET all'authorization server (Facebook) scambia così l'authorization code con l'access token, il quale viene salvato nella variabile a_t. 
 ```javascript
 app.get('/success', function(req, res){
-	console.log('code taken');
 	var code = req.query.code;
 	var options = { url : 'https://graph.facebook.com/v2.11/oauth/access_token?client_id=639398073115710&redirect_uri=http%3A%2F%2Flocalhost:3000%2Fsuccess&client_secret=7aa285d12c5b562e188b76431f31c2aa&code=' + code };
-
 
 	request(options, function optionalCallback(err, httpResponse, body){
 		if (err) {
 			return console.error('upload failed:', err);
 		}
-		console.log('Upload successful!  Server responded with:', body);
-		var info = JSON.parse(body);
-		a_t = info.access_token;
-		res.send('Got the token ' + a_t + '\nIt expires in ' + info.expires_in + ' seconds');
+		a_t = JSON.parse(body).access_token;
+		serverFunctions.sendMsgToQueue(serverFunctions.getTime() + ': got access token');
+		fs.readFile(filename, function(err, data) {
+			if (err) {
+				res.writeHead(404, {'Content-Type': 'text/html'});
+				return res.end("404 Not Found");
+			}
+			res.writeHead(200, {'Content-Type': 'text/html'});
+			res.write(data);
+			return res.end();
+		});
 	});
 });
 ``` 
@@ -132,3 +138,40 @@ serverFunctions.sendThroughWS(ws, 'Post has been published on https://www.facebo
 
 ## Eliminazione dell'access token
 Il server elimina l'access token quando il client chiude la connessione (a_t = ''). Un nuovo client dovrà pertanto autenticarsi.
+
+## Logger - Gestione della coda con AMQP
+
+```javascript
+amqp.connect('amqp://localhost', function(err, conn) {
+	conn.createChannel(function(err, ch) {
+		var q = 'log_queue';
+		ch.assertQueue(q, {durable: true});
+		console.log('Waiting for messages in %s', q);
+		ch.consume(q, function(msg) {
+			console.log('%s', msg.content.toString());
+			ch.ack(msg);
+		}, {noAck: false});
+	});
+});
+```
+
+Il logger crea una named queue durabile e persistente (noAck: false) per ricevere i messaggi del server e stamparli. Il server invia un mesaggio al verificarsi dei seguenti eventi:
+- nuova connessione WebSocket in ingresso;
+- aggiornamento di todayWeather completato;
+- ottenuto l'access token;
+- messaggio pubblicato sul proprio profilo di Facebook;
+- il client ha chiuso la connessione.
+
+Il server fa precedere il messaggio con l'orario dell'evento, calcolato con la funzione `getTime()`, e lo invia così alla coda:
+
+```javascript
+function sendMsgToQueue(msg) {
+	amqp.connect('amqp://localhost', function(err, conn) {
+		conn.createChannel(function(err, ch) {
+			var q = 'log_queue';
+			ch.assertQueue(q, {durable: true});
+			ch.sendToQueue(q, new Buffer(msg), {persistent: true});
+		});
+	});
+}
+```
