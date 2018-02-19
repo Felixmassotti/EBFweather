@@ -80,12 +80,12 @@ wss.on('connection', function connection(ws){
 });
 
 app.get('/login', function(req, res){
-	res.redirect('https://www.facebook.com/v2.11/dialog/oauth?client_id=639398073115710&redirect_uri=http%3A%2F%2Flocalhost:3000%2Fsuccess&scope=public_profile,pages_show_list,user_posts,publish_actions,manage_pages');
+	res.redirect('https://www.facebook.com/v2.12/dialog/oauth?client_id=639398073115710&redirect_uri=http%3A%2F%2Flocalhost:3000%2Fsuccess&scope=public_profile,pages_show_list,user_posts,publish_actions,manage_pages');
 });
 
 app.get('/success', function(req, res){
 	var code = req.query.code;
-	var options = { url : 'https://graph.facebook.com/v2.11/oauth/access_token?client_id=639398073115710&redirect_uri=http%3A%2F%2Flocalhost:3000%2Fsuccess&client_secret=7aa285d12c5b562e188b76431f31c2aa&code=' + code };
+	var options = { url : 'https://graph.facebook.com/v2.12/oauth/access_token?client_id=639398073115710&redirect_uri=http%3A%2F%2Flocalhost:3000%2Fsuccess&client_secret=7aa285d12c5b562e188b76431f31c2aa&code=' + code };
 
 	request(options, function optionalCallback(err, httpResponse, body){
 		if (err) {
@@ -116,7 +116,7 @@ function postTodayWeatherOnFB(ws, info){
 
 	var postFB = 'Orario pubblicazione: ' + time + '\nAlle ore ' + info.dt + ' a ' + info.name + ' si registra una temperatura di ' + info.main.temp + '°C.';
 	var options = {
-		url : 'https://graph.facebook.com/v2.11/me/feed',
+		url : 'https://graph.facebook.com/v2.12/me/feed',
 		qs : { message : postFB, access_token : a_t }
 	}
 	request.post(options, function callback(error, response, body){
@@ -133,7 +133,7 @@ function postTodayWeatherOnFB(ws, info){
 function getPhotoFromFB(ws, description){
 	/* GET request to take albumId of Meteo */
 	var options = {
-		url : 'https://graph.facebook.com/v2.11/' + pageId + '/albums',
+		url : 'https://graph.facebook.com/v2.12/' + pageId + '/albums',
 		qs : { access_token : a_t }
 	}
 	request(options, function callback(error, response, body){
@@ -150,7 +150,7 @@ function getPhotoFromFB(ws, description){
 			
 			/* GET request to take photos of Meteo */
 			var options = {
-				url : 'https://graph.facebook.com/v2.11/' + albumId + '/photos',
+				url : 'https://graph.facebook.com/v2.12/' + albumId + '/photos',
 				qs : {access_token : a_t}    
 			}
 			request(options, function(error, response, body){
@@ -169,7 +169,7 @@ function getPhotoFromFB(ws, description){
                     
 					/* GET request to take photoURL */        
 					var options = {
-						url : 'https://graph.facebook.com/v2.11/' + photoId + '?fields=images',
+						url : 'https://graph.facebook.com/v2.12/' + photoId + '?fields=images',
 						qs : {access_token  : a_t }    
 					}
 					request(options, function(error, response, body){

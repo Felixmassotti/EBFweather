@@ -38,7 +38,7 @@ Documentazione ufficiale e body della risposta [qui](https://openweathermap.org/
 ## Facebook
 ### 1. Oauth - Exchange authorization code for access token
 **Richiesta HTTP**
-`GET https://graph.facebook.com/v2.11/oauth/access_token`
+`GET https://graph.facebook.com/v2.12/oauth/access_token`
 
 | Parametro | Descrizione |
 | --------- | ----------- |
@@ -58,7 +58,7 @@ const pageId = '1839290216363075'; // pageId of 'Meteoretidicalcolatori1718'
 ```
 
 **Richiesta HTTP**
-`GET https://graph.facebook.com/v2.11/pageId/albums`
+`GET https://graph.facebook.com/v2.12/pageId/albums`
 
 Scope richiesti: pages_show_list
 
@@ -66,13 +66,13 @@ Documentazione ufficiale e body della risposta [qui](https://developers.facebook
 
 ### 3. Reading Page Photos
 **Richiesta HTTP**
-`GET https://graph.facebook.com/v2.11/albumId/photos`
+`GET https://graph.facebook.com/v2.12/albumId/photos`
 
 Documentazione ufficiale e body della risposta [qui](https://developers.facebook.com/docs/graph-api/reference/page/photos/).
 
 ### 4. Reading Photo
 **Richiesta HTTP**
-`GET https://graph.facebook.com/v2.11/photoId`
+`GET https://graph.facebook.com/v2.12/photoId`
 
 | Parametro | Descrizione |
 | --------- | ----------- |
@@ -82,7 +82,7 @@ Documentazione ufficiale [qui](https://developers.facebook.com/docs/graph-api/re
 
 ### 5. Post on your Facebook profile
 **Richiesta HTTP**
-`POST https://graph.facebook.com/v2.11/me/feed`
+`POST https://graph.facebook.com/v2.12/me/feed`
 
 Scope richiesti: user_posts, publish_actions, manage_pages
 
@@ -90,4 +90,4 @@ Scope richiesti: user_posts, publish_actions, manage_pages
 | --------- | ----------- |
 | **message** | messaggio da pubblicare |
 
-Documentazione ufficiale [qui](https://developers.facebook.com/docs/graph-api/reference/v2.11/post#publishing)
+Documentazione ufficiale [qui](https://developers.facebook.com/docs/graph-api/reference/v2.12/post#publishing)
